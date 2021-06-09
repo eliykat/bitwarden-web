@@ -13,14 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Print job info
+        run: echo $GITHUB_REF
+
       - name: Configure git
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
-          echo $GITHUB_REF
 
-      - name: checkout new branch
-        if: github.ref == 'refs/head/master'
+      - name: Checkout new branch
+        if: github.ref == 'refs/heads/master'
         run: git checkout -b bump-jslib-${github.actor}
 
       - name: Bump jslib and commit
@@ -31,7 +33,7 @@ jobs:
           git push -u origin `git branch --show-current`
 
       - name: Submit PR against master branch
-        if: github.ref == 'refs/head/master'
+        if: github.ref == 'refs/heads/master'
         run: gh pr create --title "Bump jslib" \
                           --body "This is an automated pull request to bump jslib. It was requested by ${github.actor}" \
                           --reviewer eliykat
