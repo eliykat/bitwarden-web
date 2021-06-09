@@ -24,3 +24,23 @@ jobs:
           cd $GITHUB_WORKSPACE
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
+
+  # Create commit on current branch
+  create-commit:
+    needs: setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout new branch
+        if: github.ref == 'refs/head/master'
+        run: |
+          git checkout bump-jslib-${github.actor}
+          echo "create_pr=true" >> $GITHUB_ENV
+
+      - name: Bump jslib and commit
+        run: |  
+          npm run sub:update
+          git add jslib
+          git commit -m "bump jslib"
+          git push
+
