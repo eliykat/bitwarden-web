@@ -27,6 +27,7 @@ jobs:
 
       - name: Bump jslib and commit
         run: |  
+          npm run sub:init
           npm run sub:update
           git add jslib
           git commit -m "bump jslib"
