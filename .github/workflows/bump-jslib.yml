@@ -47,7 +47,7 @@ jobs:
   # Create pull request if we're on master branch
   create-pr:
     needs: create-commit
-    if: env.create_pr == true
+    if: ${{env.create_pr == true }}
     runs-on: ubuntu-latest
     
     steps:
