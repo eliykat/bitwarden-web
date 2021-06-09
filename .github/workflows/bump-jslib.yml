@@ -7,51 +7,33 @@ on:
 jobs:
 
   # Set up environment
-  setup:
+  bump-jslib:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      - name: Print job information
-        run: |
-          echo Detected non-master branch
-          echo Creating "jslib bump" commit and pushing to branch: ${GITHUB_REF}
 
       - name: Configure git
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
+          echo ${github.ref}
 
-  # Create commit on current branch
-  create-commit:
-    needs: setup
-    runs-on: ubuntu-latest
-
-    steps:
       - name: checkout new branch
         if: github.ref == 'refs/head/master'
-        run: git checkout bump-jslib-${github.actor}
+        run: git checkout -b bump-jslib-${github.actor}
 
       - name: Bump jslib and commit
         run: |  
           npm run sub:update
           git add jslib
           git commit -m "bump jslib"
-          git push
+          git push -u origin `git branch --show-current`
 
-  # Create pull request if we're on master branch
-  create-pr:
-    needs: create-commit
-    if: github.ref == 'refs/head/master'
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Submit PR to master branch
+      - name: Submit PR against master branch
+        if: github.ref == 'refs/head/master'
         run: gh pr create --title "Bump jslib" \
                           --body "This is an automated pull request to bump jslib. It was requested by ${github.actor}" \
                           --reviewer eliykat
                           # --reviewer bitwarden/dept-engineering
-                          # For testing purposes
                           
