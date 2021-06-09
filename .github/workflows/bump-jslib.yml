@@ -33,9 +33,7 @@ jobs:
     steps:
       - name: checkout new branch
         if: github.ref == 'refs/head/master'
-        run: |
-          git checkout bump-jslib-${github.actor}
-          echo "create_pr=true" >> $GITHUB_ENV
+        run: git checkout bump-jslib-${github.actor}
 
       - name: Bump jslib and commit
         run: |  
@@ -47,7 +45,7 @@ jobs:
   # Create pull request if we're on master branch
   create-pr:
     needs: create-commit
-    if: ${{env.create_pr == true }}
+    if: github.ref == 'refs/head/master'
     runs-on: ubuntu-latest
     
     steps:
