@@ -48,6 +48,7 @@ jobs:
   create-pr:
     needs: create-commit
     if: env.create_pr == true
+    runs-on: ubuntu-latest
     
     steps:
       - name: Submit PR to master branch
