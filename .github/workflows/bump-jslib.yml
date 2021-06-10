@@ -21,7 +21,6 @@ jobs:
         run: |
           TARGET_BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
           NEW_BRANCH_NAME="auto-bump-jslib"
-          OLD_JSLIB_HASH=`git submodule status | awk '{print $1}'`
 
           if [ "$TARGET_BRANCH_NAME" = "master" ]; then
             git checkout -b ${{ env.NEW_BRANCH_NAME }}
@@ -29,12 +28,12 @@ jobs:
           fi
 
           npm run sub:init
-
+          OLD_JSLIB_HASH=`git submodule status | awk '{print $1}'`
           echo "current jslib: $OLD_JSLIB_HASH"
 
           npm run sub:update
 
-          git diff --quiet
+          git diff --quiet jslib
           if [ $? -eq 0]; then
             echo "Unable to bump jslib: branch $TARGET_BRANCH_NAME is already using the latest jslib commit.""
             exit 1
