@@ -23,7 +23,7 @@ jobs:
           NEW_BRANCH_NAME="auto-bump-jslib"
 
           if [ "$TARGET_BRANCH_NAME" = "master" ]; then
-            git checkout -b ${{ env.NEW_BRANCH_NAME }}
+            git checkout -b $NEW_BRANCH_NAME
             echo "[*] Checked out new branch $NEW_BRANCH_NAME"
           fi
 
@@ -44,10 +44,10 @@ jobs:
           echo "[*] Bumped jslib to $NEW_JSLIB_HASH"
 
           if [ "$TARGET_BRANCH_NAME" = "master" ]; then
-            git push -u origin ${{ env.NEW_BRANCH_NAME }}
+            git push -u origin $NEW_BRANCH_NAME
             echo "[*] Pushed to $NEW_BRANCH_NAME"
           else
-            git push origin ${{ env.TARGET_BRANCH_NAME }}
+            git push origin $TARGET_BRANCH_NAME
             echo "[*] Pushed to $TARGET_BRANCH_NAME"
           fi
 
