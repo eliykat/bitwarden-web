@@ -29,11 +29,10 @@ jobs:
 
           npm run sub:init
           OLD_JSLIB_HASH=`git submodule status | awk '{print $1}'`
-          echo "current jslib: $OLD_JSLIB_HASH"
 
           git diff --quiet jslib
           if [ $? -eq 0 ]; then
-            echo "Unable to bump jslib: branch $TARGET_BRANCH_NAME is already using the latest jslib commit.""
+            echo "Unable to bump jslib: branch $TARGET_BRANCH_NAME is already using the latest jslib commit."
             exit 1
           fi
 
