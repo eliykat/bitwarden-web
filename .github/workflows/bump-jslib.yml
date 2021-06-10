@@ -31,6 +31,12 @@ jobs:
           OLD_JSLIB_HASH=`git submodule status | awk '{print $1}'`
           echo "current jslib: $OLD_JSLIB_HASH"
 
+          git diff --quiet jslib
+          if [ $? -eq 0 ]; then
+            echo "Unable to bump jslib: branch $TARGET_BRANCH_NAME is already using the latest jslib commit.""
+            exit 1
+          fi
+
           npm run sub:update
 
           git add jslib
@@ -47,6 +53,7 @@ jobs:
             echo "[*] Pushed to $TARGET_BRANCH_NAME"
           fi
 
+          cd jslib
           GIT_LOG=`git log $OLD_JSLIB_HASH..$NEW_JSLIB_HASH --oneline`
           
           echo "::set-output name=target-branch-name::${TARGET_BRANCH_NAME}"
