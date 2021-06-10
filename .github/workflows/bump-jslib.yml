@@ -63,6 +63,7 @@ jobs:
         run: |
           gh pr create --title "Auto bump jslib" \
             --body "@${{github.actor}} would like to bump jslib in this repo. This will pull in the following new commits:
+              
             $GIT_LOG" \
             --reviewer eliykat
           
