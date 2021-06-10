@@ -11,7 +11,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: setup git config
+      - name: Setup git config
         run: |
           git config user.name = "GitHub Action Bot"
           git config user.email = "<>"
@@ -21,7 +21,6 @@ jobs:
         run: |
           TARGET_BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
           NEW_BRANCH_NAME="auto-bump-jslib"
-          OLD_JSLIB_HASH=`git submodule status | awk '{print $1}'`
 
           if [ "$TARGET_BRANCH_NAME" = "master" ]; then
             git checkout -b ${{ env.NEW_BRANCH_NAME }}
@@ -29,18 +28,19 @@ jobs:
           fi
 
           npm run sub:init
+          OLD_JSLIB_HASH=`git submodule status | awk '{print $1}'`
+
           npm run sub:update
 
-          git diff --quiet
-          if [ $? -eq 0]; then
-            echo "Unable to bump jslib: branch $TARGET_BRANCH_NAME is already using the latest jslib commit.""
+          if [ `git diff --quiet jslib` -eq 0 ]; then
+            echo "Unable to bump jslib: branch $TARGET_BRANCH_NAME is already using the latest jslib commit."
             exit 1
           fi
 
           git add jslib
           git commit -m "bump jslib"
 
-          NEW_JSLIB_HASH = `git submodule status | awk '{print $1}'`
+          NEW_JSLIB_HASH=`git submodule status | awk '{print $1}'`
           echo "[*] Bumped jslib to $NEW_JSLIB_HASH"
 
           if [ "$TARGET_BRANCH_NAME" = "master" ]; then
@@ -51,6 +51,7 @@ jobs:
             echo "[*] Pushed to $TARGET_BRANCH_NAME"
           fi
 
+          cd jslib
           GIT_LOG=`git log $OLD_JSLIB_HASH..$NEW_JSLIB_HASH --oneline`
           
           echo "::set-output name=target-branch-name::${TARGET_BRANCH_NAME}"
@@ -59,11 +60,13 @@ jobs:
 
       - name: Submit PR against master branch
         if: github.ref == 'refs/heads/master'
-        run: > 
+        run: |
           gh pr create --title "Auto bump jslib" \
             --body "@${{github.actor}} would like to bump jslib in this repo. This will pull in the following new commits:
             $GIT_LOG" \
-            --reviewer eliykat 
+            --reviewer eliykat
+          
+          echo "[*] Submitted PR against master branch"
         env:
           GIT_LOG: ${{ steps.bump.outputs.git-log }}
           TARGET_BRANCH_NAME: ${{ steps.bump.outputs.target-branch-name }}
