@@ -53,8 +53,6 @@ jobs:
 
           cd jslib
           GIT_LOG=`git log $OLD_JSLIB_HASH..$NEW_JSLIB_HASH --oneline`
-
-          echo "$GIT_LOG"
           
           echo "::set-output name=target-branch-name::${TARGET_BRANCH_NAME}"
           echo "::set-output name=new-branch-name::${NEW_BRANCH_NAME}"
@@ -62,11 +60,13 @@ jobs:
 
       - name: Submit PR against master branch
         if: github.ref == 'refs/heads/master'
-        run: > 
+        run: |
           gh pr create --title "Auto bump jslib" \
             --body "@${{github.actor}} would like to bump jslib in this repo. This will pull in the following new commits:
             $GIT_LOG" \
-            --reviewer eliykat 
+            --reviewer eliykat
+          
+          echo "[*] Submitted PR against master branch"
         env:
           GIT_LOG: ${{ steps.bump.outputs.git-log }}
           TARGET_BRANCH_NAME: ${{ steps.bump.outputs.target-branch-name }}
