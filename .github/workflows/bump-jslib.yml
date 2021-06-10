@@ -32,8 +32,11 @@ jobs:
 
           npm run sub:update
 
-          git diff --quiet jslib
 
+          if [ `git diff --quiet jslib` -eq 0 ]; then
+            echo "Unable to bump jslib: branch $TARGET_BRANCH_NAME is already using the latest jslib commit."
+            exit 1
+          fi
 
           git add jslib
           git commit -m "bump jslib"
