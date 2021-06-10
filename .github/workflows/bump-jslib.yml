@@ -32,7 +32,6 @@ jobs:
 
           npm run sub:update
 
-
           if [ `git diff --quiet jslib` -eq 0 ]; then
             echo "Unable to bump jslib: branch $TARGET_BRANCH_NAME is already using the latest jslib commit."
             exit 1
@@ -54,6 +53,8 @@ jobs:
 
           cd jslib
           GIT_LOG=`git log $OLD_JSLIB_HASH..$NEW_JSLIB_HASH --oneline`
+
+          echo "$GIT_LOG"
           
           echo "::set-output name=target-branch-name::${TARGET_BRANCH_NAME}"
           echo "::set-output name=new-branch-name::${NEW_BRANCH_NAME}"
