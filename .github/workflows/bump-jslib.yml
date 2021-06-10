@@ -29,6 +29,9 @@ jobs:
           fi
 
           npm run sub:init
+
+          echo "current jslib: $OLD_JSLIB_HASH"
+
           npm run sub:update
 
           git diff --quiet
