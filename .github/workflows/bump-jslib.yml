@@ -36,7 +36,7 @@ jobs:
           git add jslib
           git commit -m "bump jslib"
 
-          NEW_JSLIB_HASH = `git submodule status | awk '{print $1}'`
+          NEW_JSLIB_HASH=`git submodule status | awk '{print $1}'`
           echo "[*] Bumped jslib to $NEW_JSLIB_HASH"
 
           if [ "$TARGET_BRANCH_NAME" = "master" ]; then
