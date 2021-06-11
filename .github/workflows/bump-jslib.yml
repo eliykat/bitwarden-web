@@ -19,12 +19,24 @@ jobs:
       - name: Bump jslib and commit
         id: bump
         run: |
-          TARGET_BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
-          NEW_BRANCH_NAME="auto-bump-jslib"
+          CHECKED_OUT_BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
 
-          if [ "$TARGET_BRANCH_NAME" = "master" ]; then
-            git checkout -b $NEW_BRANCH_NAME
-            echo "[*] Checked out new branch $NEW_BRANCH_NAME"
+          if [ "$CHECKED_OUT_BRANCH_NAME" = "master" ]; then
+            TARGET_BRANCH_NAME="auto-bump-jslib"
+
+            git fetch origin
+
+            TARGET_BRANCH_EXISTS=`git ls-remote --heads origin $TARGET_BRANCH_NAME | wc -l`
+            if [ "$TARGET_BRANCH_EXISTS" -gt 0 ]; then
+              git checkout $TARGET_BRANCH_NAME
+              echo "[*] Checked out existing branch $TARGET_BRANCH_NAME"
+            else
+              git checkout -b $TARGET_BRANCH_NAME
+              echo "[*] Checked out new branch $TARGET_BRANCH_NAME"
+            fi
+          else
+            TARGET_BRANCH_NAME="$CHECKED_OUT_BRANCH_NAME"
+            echo "[*] Running on existing feature branch $TARGET_BRANCH_NAME"
           fi
 
           npm run sub:init
@@ -32,8 +44,11 @@ jobs:
 
           npm run sub:update
 
-          if [ `git diff --quiet jslib` ]; then
-            echo "Unable to bump jslib: branch $TARGET_BRANCH_NAME is already using the latest jslib commit."
+          if [ `git diff jslib | wc -l` -eq 0 ]; then
+            echo "Unable to bump jslib: branch $CHECKED_OUT_BRANCH_NAME is already using the latest jslib commit."
+            if [ "$CHECKED_OUT_BRANCH_NAME" = "master" ] && [ "$TARGET_BRANCH_EXISTS" -gt 0 ]; then
+              echo "Try merging the $TARGET_BRANCH_NAME branch first."
+            fi
             exit 1
           fi
 
@@ -43,19 +58,16 @@ jobs:
           NEW_JSLIB_HASH=`git submodule status | awk '{print $1}'`
           echo "[*] Bumped jslib to $NEW_JSLIB_HASH"
 
-          if [ "$TARGET_BRANCH_NAME" = "master" ]; then
-            git push -u origin $NEW_BRANCH_NAME
-            echo "[*] Pushed to $NEW_BRANCH_NAME"
+          if [ "$CHECKED_OUT_BRANCH_NAME" = "master" ]; then
+            git push -u origin $TARGET_BRANCH_NAME
           else
             git push origin $TARGET_BRANCH_NAME
-            echo "[*] Pushed to $TARGET_BRANCH_NAME"
           fi
+          echo "[*] Pushed to $TARGET_BRANCH_NAME"
 
           cd jslib
           GIT_LOG=`git log $OLD_JSLIB_HASH..$NEW_JSLIB_HASH --oneline`
           
-          echo "::set-output name=target-branch-name::${TARGET_BRANCH_NAME}"
-          echo "::set-output name=new-branch-name::${NEW_BRANCH_NAME}"
           echo "::set-output name=git-log::${GIT_LOG}"
 
       - name: Submit PR against master branch
@@ -70,5 +82,4 @@ jobs:
           echo "[*] Submitted PR against master branch"
         env:
           GIT_LOG: ${{ steps.bump.outputs.git-log }}
-          TARGET_BRANCH_NAME: ${{ steps.bump.outputs.target-branch-name }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
