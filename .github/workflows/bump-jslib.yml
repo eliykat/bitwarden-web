@@ -57,6 +57,8 @@ jobs:
           git commit -m "bump jslib"
 
           NEW_JSLIB_HASH=`git submodule status | awk '{print $1}'`
+          GIT_LOG=`git log $OLD_JSLIB_HASH..$NEW_JSLIB_HASH --oneline | sed 's/^/* /g' | sed 's/#[0-9]*\)/bitwarden\/jslib\/&/g'`
+
           echo "[*] Bumped jslib to $NEW_JSLIB_HASH"
 
           if [ "$EXISTING_PR" -eq 0 ]; then
