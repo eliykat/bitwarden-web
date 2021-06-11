@@ -58,6 +58,7 @@ jobs:
 
           NEW_JSLIB_HASH=`git submodule status | awk '{print $1}'`
 
+          cd jslib
           GIT_LOG=`git log $OLD_JSLIB_HASH..$NEW_JSLIB_HASH --oneline | sed 's/^/* /g' | sed 's/#[0-9]*[)]/bitwarden\/jslib\/&/g'`
           echo "$GIT_LOG"
           exit 1
