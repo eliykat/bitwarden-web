@@ -26,8 +26,6 @@ jobs:
 
             git fetch origin
 
-            echo `git ls-remote --heads origin $TARGET_BRANCH_NAME`
-
             TARGET_BRANCH_EXISTS=`git ls-remote --heads origin $TARGET_BRANCH_NAME | wc -l`
             if [ "$TARGET_BRANCH_EXISTS" -gt 0 ]; then
               git checkout $TARGET_BRANCH_NAME
