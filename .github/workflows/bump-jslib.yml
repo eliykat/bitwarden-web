@@ -21,8 +21,6 @@ jobs:
         run: |
           CHECKED_OUT_BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
 
-          echo "Running on $CHECKED_OUT_BRANCH_NAME"
-
           if [ "$CHECKED_OUT_BRANCH_NAME" = "master" ]; then
             TARGET_BRANCH_NAME="auto-bump-jslib"
 
@@ -38,7 +36,7 @@ jobs:
             fi
           else
             TARGET_BRANCH_NAME="$CHECKED_OUT_BRANCH_NAME"
-            echo "[*] Checked out existing feature branch $TARGET_BRANCH_NAME"
+            echo "[*] Running on existing feature branch $TARGET_BRANCH_NAME"
           fi
 
           npm run sub:init
@@ -48,7 +46,7 @@ jobs:
 
           if [ `git diff --quiet jslib` ]; then
             echo "Unable to bump jslib: branch $CHECKED_OUT_BRANCH_NAME is already using the latest jslib commit."
-            if [ "$CHECKED_OUT_BRANCH_NAME" = "master"] && [ $TARGET_BRANCH_EXISTS" ]; then
+            if [ "$CHECKED_OUT_BRANCH_NAME" = "master"] && [ "$TARGET_BRANCH_EXISTS" ]; then
               echo "Try merging the $TARGET_BRANCH_NAME branch first."
             exit 1
           fi
