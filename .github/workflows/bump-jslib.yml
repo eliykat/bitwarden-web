@@ -26,8 +26,8 @@ jobs:
 
             git fetch origin
 
-            TARGET_BRANCH_EXISTS=$(echo `git ls-remote --heads origin $TARGET_BRANCH_NAME | wc -l`)
-            if [ "$TARGET_BRANCH_EXISTS" ]; then
+            TARGET_BRANCH_EXISTS=`git ls-remote --heads origin $TARGET_BRANCH_NAME | wc -l`
+            if [ "$TARGET_BRANCH_EXISTS" -gt 0 ]; then
               git checkout $TARGET_BRANCH_NAME
               echo "[*] Checked out existing branch $TARGET_BRANCH_NAME"
             else
@@ -46,7 +46,7 @@ jobs:
 
           if [ `git diff jslib | wc -l` -eq 0 ]; then
             echo "Unable to bump jslib: branch $CHECKED_OUT_BRANCH_NAME is already using the latest jslib commit."
-            if [ "$CHECKED_OUT_BRANCH_NAME" = "master" ] && [ "$TARGET_BRANCH_EXISTS" ]; then
+            if [ "$CHECKED_OUT_BRANCH_NAME" = "master" ] && [ "$TARGET_BRANCH_EXISTS" -gt 0 ]; then
               echo "Try merging the $TARGET_BRANCH_NAME branch first."
             fi
             exit 1
