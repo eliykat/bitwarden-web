@@ -67,7 +67,7 @@ jobs:
           echo "[*] Pushed to $TARGET_BRANCH_NAME"
 
           cd jslib
-          GIT_LOG=`git log $OLD_JSLIB_HASH..$NEW_JSLIB_HASH --oneline | sed 's/^/* /g' | sed 's/#[0-9]*[)]/bitwarden\/jslib\/&/g'`
+          GIT_LOG=`git log $OLD_JSLIB_HASH..$NEW_JSLIB_HASH --oneline | sed 's/^/* /g' | sed 's/#[0-9]*[)]/bitwarden\/jslib&/g'`
           
           echo "::set-output name=git-log::${GIT_LOG}"
           echo "::set-output name=existing-pr::${EXISTING_PR}"
@@ -78,7 +78,7 @@ jobs:
           BODY_TEXT="@${{github.actor}} would like to bump jslib in this repo. This will pull in the following new commits:
               $GIT_LOG"
 
-          if [ $"EXISTING_PR" -eq 0 ]; then
+          if [ "$EXISTING_PR" -eq 0 ]; then
             gh pr create --title "Auto bump jslib" \
               --body "$BODY_TEXT" \
               --reviewer eliykat
