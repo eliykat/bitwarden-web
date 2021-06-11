@@ -76,10 +76,9 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: |
           BODY_TEXT="@${{github.actor}} would like to bump jslib in this repo. This will pull in the following new commits:
-                
               $GIT_LOG"
 
-          if [ $"EXISTING_PR" -eq 0]; then
+          if [ $"EXISTING_PR" -eq 0 ]; then
             gh pr create --title "Auto bump jslib" \
               --body "$BODY_TEXT" \
               --reviewer eliykat
