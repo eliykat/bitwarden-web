@@ -48,6 +48,7 @@ jobs:
             echo "Unable to bump jslib: branch $CHECKED_OUT_BRANCH_NAME is already using the latest jslib commit."
             if [ "$CHECKED_OUT_BRANCH_NAME" = "master" ] && [ "$TARGET_BRANCH_EXISTS" ]; then
               echo "Try merging the $TARGET_BRANCH_NAME branch first."
+            fi
             exit 1
           fi
 
