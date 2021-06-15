@@ -66,7 +66,7 @@ jobs:
 
           cd jslib
           echo "$(git log $OLD_JSLIB_HASH..$NEW_JSLIB_HASH --oneline | sed 's/^/* /g' | sed 's/#[0-9]*[)]/bitwarden\/jslib&/g')" >> git_log.txt
-          GIT_LOG = "$(cat git_log.txt)"
+          GIT_LOG="$(cat git_log.txt)"
           
           echo "::set-output name=git-log::${GIT_LOG}"
           echo "::set-output name=existing-pr::${EXISTING_PR}"
