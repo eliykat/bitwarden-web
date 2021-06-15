@@ -65,9 +65,8 @@ jobs:
           echo "[*] Pushed to $TARGET_BRANCH_NAME"
 
           cd jslib
-          GIT_LOG="$(git log $OLD_JSLIB_HASH..$NEW_JSLIB_HASH --oneline)"
           
-          echo "::set-output name=git-log::${GIT_LOG}"
+          echo "::set-output name=git-log::$(git log $OLD_JSLIB_HASH..$NEW_JSLIB_HASH --oneline | sed 's/^/* /g' | sed 's/#[0-9]*[)]/bitwarden\/jslib&/g')"
           echo "::set-output name=existing-pr::${EXISTING_PR}"
 
       - name: Submit or update PR against master branch
