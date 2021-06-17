@@ -63,6 +63,7 @@ jobs:
           
           echo "::set-output name=old-jslib-hash::${OLD_JSLIB_HASH}"
           echo "::set-output name=existing-pr::${EXISTING_PR}"
+          echo "::set-output name=target-branch-name::${TARGET_BRANCH_NAME}"
 
       - name: Submit or update PR against master branch
         if: github.ref == 'refs/heads/master'
