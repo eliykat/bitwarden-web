@@ -5,10 +5,10 @@ on:
     branches-ignore:
       - 'l10n_master'
       - 'gh-pages'
-    workflow_run:
-      workflows: ["Bump jslib"]
-      types: 
-        - completed
+  workflow_run:
+    workflows: ["Bump jslib"]
+    types: 
+      - completed
 
 jobs:
   cloc:
