@@ -78,7 +78,7 @@ jobs:
           if [ "$EXISTING_PR" -eq 0 ]; then
             gh pr create --title "[Bot] Bump jslib" \
               --body "$BODY_TEXT" \
-              --reviewer bitwarden/dept-engineering
+              --reviewer eliykat
             echo "[*] Submitted PR against master branch"
           else
             gh pr comment --body "$BODY_TEXT"
