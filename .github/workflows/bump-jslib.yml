@@ -69,7 +69,7 @@ jobs:
         run: |
           NEW_JSLIB_HASH=$(git submodule status | awk '{print $1}')
           cd jslib
-          GIT_LOG="$(git log $OLD_JSLIB_HASH..$NEW_JSLIB_HASH --oneline | sed 's/^[a-zA-Z0-9]*/* `&`/g' | sed 's/#[0-9]*[)]/bitwarden\/jslib&/g')"
+          GIT_LOG="<log goes here>"
           cd ..
 
           BODY_TEXT="@${{github.actor}} would like to bump jslib in this repo. This will pull in the following new commits:
