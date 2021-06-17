@@ -25,6 +25,9 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
         if: github.event_name == 'workflow_run'
 
+      - name: Print debugging information
+        run: git status
+
       - name: Set up cloc
         run: |
           sudo apt update
