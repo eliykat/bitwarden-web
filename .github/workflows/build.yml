@@ -62,7 +62,7 @@ jobs:
           gulp --version
           docker --version
           echo "GitHub ref: $GITHUB_REF"
-          echo "GitHub event: $GITHUB_EVENT"
+          echo "GitHub event: $GITHUB_EVENT_NAME"
 
       - name: Login to Azure
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/rc'
