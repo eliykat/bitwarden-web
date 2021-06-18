@@ -25,22 +25,6 @@ jobs:
         env: 
           SUCCESS: ${{ github.event.workflow_run.conclusion == 'success' }}
 
-      - name: Set target branch
-        run: |
-          if [ "$EVENT_NAME" != "workflow_run" ]; then
-            TARGET_REF="$GITHUB_REF"
-          else
-            if [ "$WORKFLOW_RUN_HEAD_BRANCH" = "master" ]; then
-              TARGET_REF="auto-bump-jslib"
-            else
-              TARGET_REF="$WORKFLOW_RUN_HEAD_BRANCH"
-            fi
-          fi
-          echo "Set target branch to $TARGET_REF"
-          echo "TARGET_REF=$(echo $TARGET_REF)" >> $GITHUB_ENV
-        env:
-          WORKFLOW_RUN_HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
-          EVENT_NAME: ${{ github.event_name }}
 
   cloc:
     name: CLOC
@@ -55,7 +39,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
         with:
-          ref: ${{ env.TARGET_REF }}
+          ref: 'auto-bump-jslib'
 
       - name: Set up cloc
         run: |
