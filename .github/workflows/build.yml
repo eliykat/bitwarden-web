@@ -22,7 +22,7 @@ jobs:
       - name: Checkout repo [bump-jslib bot]
         uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
         with:
-          ref: ${{ github.event.steps.bump.outputs.target-branch-name }}
+          ref: ${{ github.event.workflow_run.head_branch }}
         if: github.event_name == 'workflow_run'
 
       - name: Print debugging information
