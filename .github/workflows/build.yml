@@ -27,10 +27,10 @@ jobs:
 
       - name: Set target branch
         run: |
-          if [ "$EVENT_NAME" != "workflow_run"]
+          if [ "$EVENT_NAME" != "workflow_run" ]
             TARGET_REF="$GITHUB_REF"
           else
-            if [ "$WORKFLOW_RUN_HEAD_BRANCH" = "master"]
+            if [ "$WORKFLOW_RUN_HEAD_BRANCH" = "master" ]
               TARGET_REF="auto-bump-jslib"
             else
               TARGET_REF="$WORKFLOW_RUN_HEAD_BRANCH"
