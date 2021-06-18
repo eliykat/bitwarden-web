@@ -13,7 +13,6 @@ on:
 jobs:
   setup:
     name: Setup
-    id: setup
     runs-on: ubuntu-latest
     steps:
       - name: Check success of bump-jslib
